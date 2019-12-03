@@ -30,7 +30,7 @@ class EmailDeleter(object):
         self.sid = None
 
     @staticmethod
-    def serialize_ex(inputs: pq) -> Iterator:
+    def serialize_ex(inputs: pq):
         """html文件转为keys 和 vals 两个列表."""
         keys = []
         vals = []
@@ -82,7 +82,7 @@ class EmailDeleter(object):
     async def extract_login_form(self) -> pq:
         """提取登录表单"""
         url = 'https://exmail.qq.com/cgi-bin/loginpage'
-        async with self.client.get(url, verify_ssl=False, proxy='http://10.10.9.45:8888',) as r:
+        async with self.client.get(url, verify_ssl=False) as r:
             resp = await r.text()
         doc = pq(resp)
         form = doc('#loginForm')
@@ -95,7 +95,7 @@ class EmailDeleter(object):
         form('[name="domain"]').val(self.username.split('@')[1])
         form('[name="btlogin"]').remove()  # 删除标签,无须作为参数
         content = f'{self.password}\n{ts}\n'
-        with open('encrypt.js', 'r') as f:
+        with open('123.js', 'r') as f:
             js = execjs.compile(f.read())
             p = js.call('Q', content)  # 执行处理好的js文件,返回加密串
         form('[name="p"]').val(p)
@@ -121,7 +121,6 @@ class EmailDeleter(object):
         async with self.client.get(
                 url,
                 headers=self.headers,
-                proxy='http://10.10.9.45:8888',
                 verify_ssl=False
         ):
             pass
